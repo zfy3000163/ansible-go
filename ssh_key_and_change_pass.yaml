@@ -1,0 +1,12 @@
+---
+- hosts: '{{hosts}}'
+  gather_facts: true 
+  tasks:
+    - name: ssh-copy
+      authorized_key: user={{ user }} key="{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+
+    - name: change user passwd
+      user: name={{ name }} password={{ passwd | password_hash('sha512') }}  update_password=always
+      register: result
+    - name: get result info
+      debug: var=result verbosity=0
